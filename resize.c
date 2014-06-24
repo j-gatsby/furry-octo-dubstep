@@ -82,6 +82,16 @@ int main(int argc, char* argv[])
 																																						//   Maybe the following:
 																																						// 			FILE: bfSize
 																																						// 			INFO: biSize, biWidth, biHeight, biSizeImage
+																																						
+																																						//   ????? Should old values be saved ??????
+																																						//   ????? Should padding be addressed here ?????
+																																						//   ????? How are the *Size values calculated ?????
+																																						//		Might not need to manually change the values
+																																						//  			-  maybe just need to change Width & Height 
+																																						
+	// NOTE: once again, I forgot to watch the ProblemSet Walkthrough video, up to this point.  I just watched it, and Zamayla had an answer
+	//				to every question I had above.  Plus the answers to all of the questions I would have had later on.
+	
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
 
