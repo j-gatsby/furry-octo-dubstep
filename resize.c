@@ -28,22 +28,26 @@ int main(int argc, char* argv[])
         printf("Usage: ./resize n infile outfile\n");
         return 1;
     }
-	//  <-------------------------------------------   Need to validate argv[1] is + int 0-100
-	
+    
     // remember filenames
     char* infile = argv[2];
     char* outfile = argv[3];
 
 	// remember desired outfile size
-	//char* n = argv[1];       <-----------------------------    I think this is probably unecessary
-	//int resize = atoi(n);
+	int resize = atoi(argv[1]);       //  <-----------------------    Need to change argv[1]  to type int
+	if (resize < 1 || resize > 100)   //   <-----------------------   Need to validate argv[1] is + int 0-100
+	{
+		printf("Usage: ./resize n infile outfile\n");
+		printf(" - n must be of size 1-100\n");
+		return 2;
+	}
 	
     // open input file 
     FILE* inptr = fopen(infile, "r");
     if (inptr == NULL)
     {
         printf("Could not open %s.\n", infile);
-        return 2;
+        return 3;
     }
 
     // open output file
@@ -52,7 +56,7 @@ int main(int argc, char* argv[])
     {
         fclose(inptr);
         fprintf(stderr, "Could not create %s.\n", outfile);
-        return 3;
+        return 4;
     }
     
     // read infile's BITMAPFILEHEADER
