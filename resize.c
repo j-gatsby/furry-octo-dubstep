@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 	if (resize < 1 || resize > 100)   //   <-----------------------   Need to validate argv[1] is + int 0-100
 	{
 		printf("Usage: ./resize n infile outfile\n");
-		printf(" - n must be of size 1-100\n");
+		printf(" - n must be of value 1-100\n");
 		return 2;
 	}
 	
@@ -78,7 +78,10 @@ int main(int argc, char* argv[])
     }
     
     //  <-----------------------------------------   Need to reassign the values contained in BITMAP___HEADER here
-
+																																						//  ????? Not sure exactly which ones ??????
+																																						//   Maybe the following:
+																																						// 			FILE: bfSize
+																																						// 			INFO: biSize, biWidth, biHeight, biSizeImage
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
 
@@ -95,7 +98,7 @@ int main(int argc, char* argv[])
         for (int j = 0; j < (bi.biWidth); j++)
         {
             // temporary storage
-            RGBTRIPLE triple;       // <-----------------------    Not sure exactly what is happening here
+            RGBTRIPLE triple;       // <-----------------------    ????? Not sure exactly what is happening here  ?????
             																														// - RGBTRIPLE is a data type in bmp files, like an int
             																															//  - so a variable of type RGBTRIPLE, named 'triple' is being declared
             																															//   	but is not yet being assigned a value
