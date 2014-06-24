@@ -85,7 +85,12 @@ int main(int argc, char* argv[])
    bi.biWidth = oldWidth * resize;			
    bi.biHeight = oldHeight * resize;			
     
+    // Does not pass check50, so changing other header info I had originally listed
+    bi.biSizeImage = bi.biSizeImage * resize;
+    bf.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (bi.biSizeImage * resize);
+    
 	// determine padding for scanlines
+    int oldPadding = (4 - (oldWidth * sizeof(RGBTRIPLE)) % 4) % 4;
     int padding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;																														
 	
     // write outfile's BITMAPFILEHEADER
@@ -124,7 +129,7 @@ int main(int argc, char* argv[])
 		    	} 
 	    	}
     	 	// skip over padding, if any
-	    	fseek(inptr, padding, SEEK_CUR);
+	    	fseek(inptr, oldPadding, SEEK_CUR);
 
 		   	// then add it back (to demonstrate how)
 	    	for (int k = 0; k < padding; k++)
