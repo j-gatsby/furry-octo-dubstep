@@ -78,13 +78,13 @@ int main(int argc, char* argv[])
     }
     
     //  Change header info
-    int oldWidth = biWidth;
-    int oldHeight = biHeight;
+    int oldWidth = bi.biWidth;
+    int oldHeight = bi.biHeight;
    bi.biWidth = oldWidth * resize;			
    bi.biHeight = oldHeight * resize;			
     
 	// determine padding for scanlines
-	int oldPadding = padding;							//  <---------------  Added new variable and assigned it the value of the old padding
+	//int oldPadding = padding;							//  <---------------  Added new variable and assigned it the value of the old padding
     int padding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;				//  <--------  Update the value of padding, for resize																													
 	
     // write outfile's BITMAPFILEHEADER
@@ -94,30 +94,37 @@ int main(int argc, char* argv[])
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);     
 
     // iterate over infile's scanlines
-    for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)				
+    for (int i = 0, biHeight = abs(oldHeight); i < biHeight; i++)			//	<-----  Ok, yes, and biHeight here needs to represent to oldHeight
     {
-        // iterate over pixels in scanline
-        for (int j = 0; j < (bi.biWidth); j++)
-        {
-            // temporary storage
-            RGBTRIPLE triple;       
-            // read RGB triple from infile
-            fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
-            
-            //  <--------------------------------------   Need another for loop here, to write to outfile 'resize' times
+    	for(int printline = 0; printline < resize; printline++)
+    	{
+		    // iterate over pixels in scanline
+		    for (int j = 0; j < (oldWidth); j++)								//  <-------  And j needs to be < oldWidth here, since you cannot iterate over 
+		    {																								//								things that are not there
+		        // temporary storage
+		        RGBTRIPLE triple;       
+		        // Figure out how to save the cursor here, in the infile, and then reset it to here after writing
+		        
+		        // read RGB triple from infile 
+		        fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
+		       
+		        //  Iterate over each pixel read in, resize times
+				for (int printpix = 0; printpix < resize; printpix++)
+				{
+		        	// write RGB triple to outfile
+		        	fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+		    	} 
+	    	}
+	    	
+    	 	// skip over padding, if any
+	    	fseek(inptr, padding, SEEK_CUR);
 
-            // write RGB triple to outfile
-            fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
-        }
-
-        // skip over padding, if any
-        fseek(inptr, padding, SEEK_CUR);
-
-        // then add it back (to demonstrate how)
-        for (int k = 0; k < padding; k++)
-        {
-            fputc(0x00, outptr);
-        }
+		   	// then add it back (to demonstrate how)
+	    	for (int k = 0; k < padding; k++)
+	    	{
+	       	 fputc(0x00, outptr);
+	    	}  
+		}
     }
 
     // close infile
