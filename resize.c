@@ -33,9 +33,11 @@ int main(int argc, char* argv[])
     char* infile = argv[2];
     char* outfile = argv[3];
 
-	// remember desired outfile size
-	int resize = atoi(argv[1]);       //  <-----------------------    Need to change argv[1]  to type int
-	if (resize < 1 || resize > 100)   //   <-----------------------   Need to validate argv[1] is + int 0-100
+	// remember desired outfile size & change argv[1]  to type int
+	int resize = atoi(argv[1]);       
+	
+	// validate argv[1] is a positive int between 0-100
+	if (resize < 1 || resize > 100)   
 	{
 		printf("Usage: ./resize n infile outfile\n");
 		printf(" - n must be of value 1-100\n");
@@ -95,12 +97,16 @@ int main(int argc, char* argv[])
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(oldHeight); i < biHeight; i++)	
     {
-    	//  Thanks to cplusplus.com/reference/cstdio/fsetpos/
-    	fpos_t position;													// <--------------  I could not figure out the proper syntax from other reference sites
-    	fgetpos(inptr, &position);									//  <--------------  or the proper use of fpos_t, fgetpos, fsetpos, ftell, or even fseek
+    	//  get position of cursor while it is at the start of the scanline
+    	fpos_t position;									
+    	fgetpos(inptr, &position);									
+    	//  Thanks to cplusplus.com/reference/cstdio/fsetpos
+    	
     	for(int printline = 0; printline < resize; printline++)
     	{
+    		// set cursor position of infile back to the beginning of the scanline
     		fsetpos(inptr, &position);
+    		
 		    // iterate over pixels in scanline
 		    for (int j = 0; j < (oldWidth); j++)				 
 		    {																						
@@ -117,7 +123,6 @@ int main(int argc, char* argv[])
 		        	fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
 		    	} 
 	    	}
-	    	
     	 	// skip over padding, if any
 	    	fseek(inptr, padding, SEEK_CUR);
 
@@ -128,7 +133,6 @@ int main(int argc, char* argv[])
 	    	}  
 		}
     }
-
     // close infile
     fclose(inptr);
 
