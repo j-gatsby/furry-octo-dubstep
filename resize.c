@@ -92,7 +92,9 @@ int main(int argc, char* argv[])
         {
             // temporary storage
             RGBTRIPLE triple;       // <-----------------------    Not sure exactly what is happening here
-
+            																														// - RGBTRIPLE is a data type in bmp files, like an int
+            																															//  - so a variable of type RGBTRIPLE, named 'triple' is being declared
+            																															//   	but is not yet being assigned a value
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
             
