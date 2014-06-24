@@ -77,26 +77,19 @@ int main(int argc, char* argv[])
         return 4;
     }
     
-    //  <-----------------------------------------   Need to reassign the values contained in BITMAP___HEADER here
-																																						//  ????? Not sure exactly which ones ??????
-																																						//   Maybe the following:
-																																						// 			FILE: bfSize
-																																						// 			INFO: biSize, biWidth, biHeight, biSizeImage
+    //  Change header info
+    int oldWidth = biWidth;
+    int oldHeight = biHeight;
+    biWidth = oldWidth * resize;
+    biHeight = oldHeight * resize;
+    
 																																						
-																																						//   ????? Should old values be saved ??????
-																																						//   ????? Should padding be addressed here ?????
-																																						//   ????? How are the *Size values calculated ?????
-																																						//		Might not need to manually change the values
-																																						//  			-  maybe just need to change Width & Height 
-																																						
-	// NOTE: once again, I forgot to watch the ProblemSet Walkthrough video, up to this point.  I just watched it, and Zamayla had an answer
-	//				to every question I had above.  Plus the answers to all of the questions I would have had later on.
 	
     // write outfile's BITMAPFILEHEADER
-    fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
+    fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);		//   <------------  Needs to come after padding is determined
 
     // write outfile's BITMAPINFOHEADER
-    fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
+    fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);     //   <------------   Needs to come after padding is determined
 
     // determine padding for scanlines
     int padding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
@@ -108,10 +101,7 @@ int main(int argc, char* argv[])
         for (int j = 0; j < (bi.biWidth); j++)
         {
             // temporary storage
-            RGBTRIPLE triple;       // <-----------------------    ????? Not sure exactly what is happening here  ?????
-            																														// - RGBTRIPLE is a data type in bmp files, like an int
-            																															//  - so a variable of type RGBTRIPLE, named 'triple' is being declared
-            																															//   	but is not yet being assigned a value
+            RGBTRIPLE triple;       
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
             
