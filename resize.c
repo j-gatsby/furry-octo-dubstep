@@ -84,8 +84,7 @@ int main(int argc, char* argv[])
    bi.biHeight = oldHeight * resize;			
     
 	// determine padding for scanlines
-	//int oldPadding = padding;							//  <---------------  Added new variable and assigned it the value of the old padding
-    int padding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;				//  <--------  Update the value of padding, for resize																													
+    int padding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;																														
 	
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);		
@@ -94,20 +93,23 @@ int main(int argc, char* argv[])
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);     
 
     // iterate over infile's scanlines
-    for (int i = 0, biHeight = abs(oldHeight); i < biHeight; i++)			//	<-----  Ok, yes, and biHeight here needs to represent to oldHeight
+    for (int i = 0, biHeight = abs(oldHeight); i < biHeight; i++)	
     {
+    	//  Thanks to cplusplus.com/reference/cstdio/fsetpos/
+    	fpos_t position;													// <--------------  I could not figure out the proper syntax from other reference sites
+    	fgetpos(inptr, &position);									//  <--------------  or the proper use of fpos_t, fgetpos, fsetpos, ftell, or even fseek
     	for(int printline = 0; printline < resize; printline++)
     	{
+    		fsetpos(inptr, &position);
 		    // iterate over pixels in scanline
-		    for (int j = 0; j < (oldWidth); j++)								//  <-------  And j needs to be < oldWidth here, since you cannot iterate over 
-		    {																								//								things that are not there
+		    for (int j = 0; j < (oldWidth); j++)				 
+		    {																						
 		        // temporary storage
 		        RGBTRIPLE triple;       
-		        // Figure out how to save the cursor here, in the infile, and then reset it to here after writing
 		        
 		        // read RGB triple from infile 
 		        fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
-		       
+		        
 		        //  Iterate over each pixel read in, resize times
 				for (int printpix = 0; printpix < resize; printpix++)
 				{
