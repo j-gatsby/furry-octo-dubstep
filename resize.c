@@ -80,22 +80,20 @@ int main(int argc, char* argv[])
     //  Change header info
     int oldWidth = biWidth;
     int oldHeight = biHeight;
-    biWidth = oldWidth * resize;
-    biHeight = oldHeight * resize;
+   bi.biWidth = oldWidth * resize;			// <--------- changing variable name from biWidth to bi.biWidth
+   bi.biHeight = oldHeight * resize;			// <---------changing variable name from biHeight to bi.biHeight
     
-																																						
+	// determine padding for scanlines
+    int padding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;		//  <-------   This makes me think the variables above should be bi.bi*																																			
 	
     // write outfile's BITMAPFILEHEADER
-    fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);		//   <------------  Needs to come after padding is determined
+    fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);		
 
     // write outfile's BITMAPINFOHEADER
-    fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);     //   <------------   Needs to come after padding is determined
-
-    // determine padding for scanlines
-    int padding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+    fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);     
 
     // iterate over infile's scanlines
-    for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
+    for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)				//  <-------  This confirms it.  biHeight's value is dependent on bi.biHeight
     {
         // iterate over pixels in scanline
         for (int j = 0; j < (bi.biWidth); j++)
