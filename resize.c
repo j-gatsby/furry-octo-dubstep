@@ -28,7 +28,8 @@ int main(int argc, char* argv[])
         printf("Usage: ./resize n infile outfile\n");
         return 1;
     }
-
+	//  <-------------------------------------------   Need to validate argv[1] is + int 0-100
+	
     // remember filenames
     char* infile = argv[2];
     char* outfile = argv[3];
