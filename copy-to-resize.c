@@ -107,15 +107,15 @@ int main(int argc, char* argv[])
         for (int j = 0; j < bi.biWidth; j++)
         {
             // temporary storage
-            RGBTRIPLE triple;
+            //RGBTRIPLE triple;
  
             // read RGB triple from infile
-            fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
+            //fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
  			
  			for (int writepix =0; writepix < resize; writepix++)
  			{
             	// read RGB triple to buffer
-            	fread(&buffer, sizeof(RGBTRIPLE), 1, triple);
+            	fread(&buffer, sizeof(RGBTRIPLE), 1, inptr);
  			}
  				
  		}
