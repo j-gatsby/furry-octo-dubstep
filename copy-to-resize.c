@@ -100,10 +100,14 @@ int main(int argc, char* argv[])
  
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
- 
-            // write RGB triple to buffer
-            fwrite(&triple, sizeof(RGBTRIPLE), 1, buffer);
-        }
+ 			
+ 			for (int writepix =0; writepix < resize; writepix++)
+ 			{
+            	// write RGB triple to buffer
+            	fwrite(&triple, sizeof(RGBTRIPLE), 1, buffer);
+ 			}
+ 				
+ 		}
  
         // skip over padding, if any
         fseek(inptr, oldPadding, SEEK_CUR);
