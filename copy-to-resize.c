@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
 	int newPadding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
  	
  	// create buffer to store scanline
-	RGBTRIPLE *buffer = malloc(sizeof(RGBTRIPLE) * bi.biWidth + newPadding);
+	char *buffer = malloc(sizeof(RGBTRIPLE) * bi.biWidth + newPadding);
 	
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
