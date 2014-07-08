@@ -117,6 +117,12 @@ int main(int argc, char* argv[])
         {
             fputc(0x00, buffer);
         }
+        
+        for (int writeline = 0; writeline < resize; writeline++)
+        {
+        	// write scanline to outfile
+        	fwrite(&buffer, sizeof(buffer), 1, outptr);
+        }
     }
  
     // close infile
