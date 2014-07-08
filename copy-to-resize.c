@@ -114,25 +114,26 @@ int main(int argc, char* argv[])
  			
  			for (int writepix =0; writepix < resize; writepix++)
  			{
-            	// write RGB triple to buffer
-            	fwrite(&triple, sizeof(RGBTRIPLE), 1, buffer);
+            	// read RGB triple to buffer
+            	fread(&buffer, sizeof(RGBTRIPLE), 1, triple);
  			}
  				
  		}
  
-        // skip over padding, if any
-        fseek(inptr, oldPadding, SEEK_CUR);
- 
-        // then add it back
-        for (int k = 0; k < newPadding; k++)
-        {
-            fputc(0x00, buffer);
-        }
         
         for (int writeline = 0; writeline < resize; writeline++)
         {
         	// write scanline to outfile
         	fwrite(&buffer, sizeof(buffer), 1, outptr);
+        	
+        	// skip over padding, if any
+        	fseek(inptr, oldPadding, SEEK_CUR);
+ 
+        	// then add it back
+        	for (int k = 0; k < newPadding; k++)
+        	{
+            	fputc(0x00, outptr);
+        	}
         }
     }
  
