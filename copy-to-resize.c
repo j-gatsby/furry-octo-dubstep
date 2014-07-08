@@ -17,39 +17,50 @@
         
 #include <stdio.h>
 #include <stdlib.h>
- 
+
 #include "bmp.h"
- 
+
 int main(int argc, char* argv[])
 {
     // ensure proper usage
-    if (argc != 3)
+    if (argc != 4)
     {
-        printf("Usage: ./copy infile outfile\n");
+        printf("Usage: ./resize n infile outfile\n");
         return 1;
     }
- 
+    
     // remember filenames
-    char* infile = argv[1];
-    char* outfile = argv[2];
- 
+    char* infile = argv[2];
+    char* outfile = argv[3];
+
+	// remember desired outfile size & change argv[1]  to type int
+	int resize = atoi(argv[1]);
+	
+	// validate argv[1] is a positive int between 0-100
+	if (resize < 1 || resize > 100)
+	{
+		printf("Usage: ./resize n infile outfile\n");
+		printf(" - n must be of value 1-100\n");
+		return 2;
+	}
+	
     // open input file
     FILE* inptr = fopen(infile, "r");
     if (inptr == NULL)
     {
         printf("Could not open %s.\n", infile);
-        return 2;
+        return 3;
     }
- 
+
     // open output file
     FILE* outptr = fopen(outfile, "w");
     if (outptr == NULL)
     {
         fclose(inptr);
         fprintf(stderr, "Could not create %s.\n", outfile);
-        return 3;
+        return 4;
     }
- 
+    
     // read infile's BITMAPFILEHEADER
     BITMAPFILEHEADER bf;
     fread(&bf, sizeof(BITMAPFILEHEADER), 1, inptr);
