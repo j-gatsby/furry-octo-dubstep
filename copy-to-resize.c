@@ -108,10 +108,10 @@ int main(int argc, char* argv[])
         // skip over padding, if any
         fseek(inptr, oldPadding, SEEK_CUR);
  
-        // then add it back (to demonstrate how)
+        // then add it back
         for (int k = 0; k < newPadding; k++)
         {
-            fputc(0x00, outptr);
+            fputc(0x00, buffer);
         }
     }
  
